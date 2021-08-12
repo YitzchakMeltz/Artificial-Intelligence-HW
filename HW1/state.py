@@ -15,7 +15,7 @@ def create(n):
     for i in range(n*n*n):  # makes n^3 random moves
         if_legal(s,m[random.randrange(4)])
     return [s,""]           # at the beginning "" is an empty path, later on path
-                            # contains the path that leads from the initial state to the state
+                            # contains the path that leads from the initial state to the goal state
 
 def get_next(x):            # returns a list of the children states of x
     ns=[]                   # the next state list

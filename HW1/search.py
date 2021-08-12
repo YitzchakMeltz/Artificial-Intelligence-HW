@@ -3,6 +3,8 @@ import frontier
 
 def search(n):
     s = state.create(n)
+    print("state: ",s)
+
     f = frontier.create(s)
 
     while not frontier.is_empty(f):
@@ -16,9 +18,9 @@ def search(n):
         for i in ns:
             frontier.insert(f,i)
 
-    return 0
+    return f
 
 
-sg = search(2)
+sg = search(4)
 
 print(sg,len(sg[1]))

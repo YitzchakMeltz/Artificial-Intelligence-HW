@@ -11,7 +11,7 @@ import state
 
 def create(x):
     s=stack.create(x)
-    return [ s,1,x,False ]
+    return [ s,1,x,False,1 ]    # [stack, max. depth, init. state, try next level?, total items pushed]
 
 def is_empty(s):
     return stack.is_empty(s[0]) and not s[3] # stack is empty and try next level is false
@@ -19,6 +19,7 @@ def is_empty(s):
 def insert(s,x):
     if state.path_len(x)<=s[1]: # check if x is not too deep
         stack.insert(s[0],x)    # insert x to stack
+        s[4] += 1               # increment counter for state pushed in
     else:
         s[3]=True               # there is a reason to search deeper if needed
     
