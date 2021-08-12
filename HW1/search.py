@@ -27,6 +27,10 @@ sg = search(2)
 
 print(sg)
 
+
+#-------------------------------------------------------------------
+#------------------Average Over 100 Tests Program ------------------
+
 print("=================================================")
 print("========Calcuating Average Over 100 Tests========")
 
@@ -34,7 +38,7 @@ depthSum = 0
 numSum = 0
 
 for i in range(100):
-    sg = search(2)
+    sg = search(3)
     depthSum += sg[2]
     numSum += sg[3]
 
