@@ -3,7 +3,7 @@ import frontier
 
 def search(n):
     s = state.create(n)
-    print("state: ",s)
+#    print("state: ",s)
 
     f = frontier.create(s)
 
@@ -11,6 +11,8 @@ def search(n):
         s = frontier.remove(f)
 
         if state.is_target(s):
+            s.append(f[1])
+            s.append(f[4])
             return s
 
         ns = state.get_next(s)
@@ -18,9 +20,23 @@ def search(n):
         for i in ns:
             frontier.insert(f,i)
 
-    return f
+    return 0
 
 
-sg = search(4)
+sg = search(2)
 
-print(sg,len(sg[1]))
+print(sg)
+
+print("=================================================")
+print("========Calcuating Average Over 100 Tests========")
+
+depthSum = 0
+numSum = 0
+
+for i in range(100):
+    sg = search(2)
+    depthSum += sg[2]
+    numSum += sg[3]
+
+print("Average Depth: ",(depthSum/100))
+print("Average Number: ",(numSum/100))
