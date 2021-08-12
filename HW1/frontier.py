@@ -31,5 +31,3 @@ def remove(s):
         else:
             return 0
     return stack.remove(s[0])   # if there are items in the stack ...
-
-    

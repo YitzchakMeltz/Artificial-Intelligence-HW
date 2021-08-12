@@ -52,4 +52,3 @@ def if_legal(x,m):                  # gets a board and a move and makes the move
     elif z<n*n-n and m=="v":        # check if the empty tile is not in the n's row and the move is down
         x[z]=x[z+n]
         x[z+n]=0
-
