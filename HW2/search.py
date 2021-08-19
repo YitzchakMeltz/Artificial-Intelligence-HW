@@ -16,4 +16,5 @@ def search(n):
         for i in ns:
             frontier.insert(f,i)
     return 0
-    
+
+print(search(3))    

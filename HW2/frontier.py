@@ -8,12 +8,14 @@ the right side of index i is in index 2i+2
 import state
 
 def create(s):
-    return [s]      # returns a priority queue that contains s
+    return [[s],0,0]      # returns a priority queue that contains s
 
 def is_empty(f):
     return f==[]    # returns true iff f is empty list
 
 def insert(f, s):
+    h[1]+=1
+    h[2]+=1
                     # inserts state s to the frontier
     f.append(s)     # inserts the new state as the last item
     i=len(f)-1      # i gets its value
@@ -29,6 +31,7 @@ def insert(f, s):
 def remove(f):      # remove and return the root of f
     if is_empty(f): # underflow
         return 0
+    h[2]-=1
     s=f[0]          # store the root that should be returned
     f[0]=f[len(f)-1]    # the last leaf becomes the root
     del f[-1]       # delete the last leaf
