@@ -55,5 +55,15 @@ def if_legal(x,m):                  # gets a board and a move and makes the move
         x[z+n]=0
 
 def hdistance(s):                   # the heuristic value of s
-    return 0
+    # Q2
+    #return 0   
 
+    # Q4
+    #count = 0
+    #for i in range(len(s[0])):
+    #    if s[0][i] != i:
+    #        count += 1
+    #return count
+
+    #Q6
+    for i in range(len(s[0])):

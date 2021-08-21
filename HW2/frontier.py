@@ -8,34 +8,36 @@ the right side of index i is in index 2i+2
 import state
 
 def create(s):
-    return [[s],0,0]      # returns a priority queue that contains s
+    return [[s],1,1]      # returns a priority queue that contains s
 
 def is_empty(f):
     return f==[]    # returns true iff f is empty list
 
 def insert(f, s):
-    h[1]+=1
-    h[2]+=1
+    h=f[0]
+    f[1]+=1
+    f[2]+=1
                     # inserts state s to the frontier
-    f.append(s)     # inserts the new state as the last item
-    i=len(f)-1      # i gets its value
+    h.append(s)     # inserts the new state as the last item
+    i=len(h)-1      # i gets its value
 
     # move the item with smallest value to the root
-    while i>0 and val(f[i])<val(f[(i-1)//2]): # while item i's value is smaller than the value of his father, swap!
+    while i>0 and val(h[i])<val(h[(i-1)//2]): # while item i's value is smaller than the value of his father, swap!
         # the next three lines swap i and his father
-        t=f[i]
-        f[i]=f[(i-1)//2]
-        f[(i-1)//2]=t
+        t=h[i]
+        h[i]=h[(i-1)//2]
+        h[(i-1)//2]=t
         i=(i-1)//2  # i moves upwards
 
 def remove(f):      # remove and return the root of f
-    if is_empty(f): # underflow
+    h=f[0]
+    if is_empty(h): # underflow
         return 0
-    h[2]-=1
-    s=f[0]          # store the root that should be returned
-    f[0]=f[len(f)-1]    # the last leaf becomes the root
-    del f[-1]       # delete the last leaf
-    heapify(f,0)    # fixing the heap
+    s=h[0]          # store the root that should be returned
+    h[0]=h[len(h)-1]    # the last leaf becomes the root
+    del h[-1]       # delete the last leaf
+    f[2]-=1
+    heapify(h,0)    # fixing the heap
     return s
 
 def val(s):         # returns path len + heuristic distance from target
@@ -62,6 +64,3 @@ def heapify(f,i):   # fix the heap by rolling down from index i
         f[minSon]=f[i]
         f[i]=t
         heapify(f, minSon)              # repeat recursively
-        
-        
-    
