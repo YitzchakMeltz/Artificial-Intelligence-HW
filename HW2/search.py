@@ -33,7 +33,7 @@ depthSum = 0
 numSum = 0
 
 for i in range(100):
-    sg = search(4)
+    sg = search(3)
     depthSum += sg[2]
     numSum += sg[3]
 

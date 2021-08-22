@@ -59,6 +59,7 @@ def hdistance(s):                   # the heuristic value of s
     #return 0   
 
     # Q4
+    # how many tiles are out of place
     #count = 0
     #for i in range(len(s[0])):
     #    if s[0][i] != i:
@@ -66,4 +67,8 @@ def hdistance(s):                   # the heuristic value of s
     #return count
 
     #Q6
+    # manhattan
+    sum = 0
     for i in range(len(s[0])):
+        sum += abs(i // math.sqrt(len(s[0])) - s[0][i] // math.sqrt(len(s[0]))) + abs(i % math.sqrt(len(s[0])) - s[0][i] % math.sqrt(len(s[0])))
+    return sum
