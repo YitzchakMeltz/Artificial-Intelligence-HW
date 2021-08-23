@@ -40,7 +40,7 @@ def create(s):
         s.size=rows*columns
         s.val=0.00001
     
-        #return [board, 0.00001, playTurn, r*c]     # 0 is TIE
+        return [s.board, 0.00001, s.playTurn, rows*columns]     # 0 is TIE
 
 def cpy(s1):
         # construct a parent DataFrame instance
@@ -55,7 +55,8 @@ def cpy(s1):
     
 def value(s):
 #Returns the heuristic value of s
-    if random.random()>0.1:
+    #if random.random()>0.1:
+    if True:
         return random.random()*10
     else:
         return random.choice([LOSS,VICTORY,TIE])
@@ -95,7 +96,62 @@ def printState(s):
 
 def isFinished(s):
 #Seturns True iff the game ended
-        return value(s) in [LOSS, VICTORY, TIE] or s.size==0
+        if s.size==0:
+            return True
+        
+        # Check Rows for final state
+        for i in range(rows):
+            countHuman=0
+            countComp=0
+            for j in range(columns):
+                if s.board[i][j]==HUMAN:
+                    countComp=0
+                    countHuman+=1
+                if s.board[i][j]==COMPUTER:
+                    countHuman=0
+                    countComp+=1
+                if s.board[i][j]==0:
+                    countHuman=0
+                    countComp=0
+                if countComp==4 or countHuman==4:
+                    return True
+
+        # Check Columns for final state
+        for j in range(columns):
+            countHuman=0
+            countComp=0
+            for i in range(rows):
+                if s.board[i][j]==HUMAN:
+                    countComp=0
+                    countHuman+=1
+                if s.board[i][j]==COMPUTER:
+                    countHuman=0
+                    countComp+=1
+                if s.board[i][j]==0:
+                    countHuman=0
+                    countComp=0
+                if countComp==4 or countHuman==4:
+                    return True
+
+        # Check Upward Diagonal for final state
+        for line in range(1, (rows + columns)):
+            countHuman=0
+            countComp=0
+            start_col = max(0, line - rows)
+            count = min(line, (columns - start_col), rows)
+            for j in range(0, count):
+                if s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
+                    countComp=0
+                    countHuman+=1
+                if s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
+                    countHuman=0
+                    countComp+=1
+                if s.board[min(rows, line) - j - 1][start_col + j]==0:
+                    countHuman=0
+                    countComp=0
+                if countComp==4 or countHuman==4:
+                    return True
+        return False
 
 
 def isHumTurn(s):
