@@ -151,6 +151,25 @@ def isFinished(s):
                     countComp=0
                 if countComp==4 or countHuman==4:
                     return True
+
+        # Check Downward Diagonal for final state
+        for line in range(1, (rows + columns)):
+            countHuman=0
+            countComp=0
+            start_row = max(0, line - columns)
+            count = min(line, (rows - start_row), columns)
+            for j in range(0, count):
+                if s.board[min(columns, line) - j - 1][start_row + j]==HUMAN:
+                    countComp=0
+                    countHuman+=1
+                if s.board[min(columns, line) - j - 1][start_row + j]==COMPUTER:
+                    countHuman=0
+                    countComp+=1
+                if s.board[min(columns, line) - j - 1][start_row + j]==0:
+                    countHuman=0
+                    countComp=0
+                if countComp==4 or countHuman==4:
+                    return True
         return False
 
 
