@@ -153,19 +153,22 @@ def isFinished(s):
                     return True
 
         # Check Downward Diagonal for final state
-        for line in range(1, (rows + columns)):
+        ans = [[] for i in range(rows + columns - 1)]
+        for i in range(rows):
+            for j in range(columns):
+                ans[i - j + 3].append(s.board[i][j])
+
+        for i in range(len(ans)):
             countHuman=0
             countComp=0
-            start_row = max(0, line - columns)
-            count = min(line, (rows - start_row), columns)
-            for j in range(0, count):
-                if s.board[min(columns, line) - j - 1][start_row + j]==HUMAN:
+            for j in range(len(ans[i])):
+                if ans[i][j]==HUMAN:
                     countComp=0
                     countHuman+=1
-                if s.board[min(columns, line) - j - 1][start_row + j]==COMPUTER:
+                if ans[i][j]==COMPUTER:
                     countHuman=0
                     countComp+=1
-                if s.board[min(columns, line) - j - 1][start_row + j]==0:
+                if ans[i][j]==0:
                     countHuman=0
                     countComp=0
                 if countComp==4 or countHuman==4:
