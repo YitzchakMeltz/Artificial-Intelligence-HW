@@ -62,7 +62,7 @@ def value(s):
         return LOSS
 
     if compThreeCase(s):
-        return 50
+        return 500
 
     return random.random()*10
         
@@ -420,3 +420,19 @@ def compThreeCase(s):
                     return True
         
         return False
+
+# returns heuristic value giving higher value for non corner or sides
+def countValues(s):
+    # Check Rows for final state
+    sumValues=0
+
+    for i in range(rows):
+        for j in range(columns):
+            if s.board[i][j]==5:
+                if (j==0 or j==(columns-1)) and (i==0 or i==(rows-1)):
+                    sumValues+=1
+                else if j==0 or j==(columns-1):
+                    sum+=2
+                else
+                    sum+=3        
+    return sumValues
