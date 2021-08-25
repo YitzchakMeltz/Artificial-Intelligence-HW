@@ -1,5 +1,6 @@
 import copy
 import alphaBetaPruning
+from heuristics import*
 import random
 
 VICTORY=10**20 #The value of a winning board (for max) 
@@ -54,12 +55,10 @@ def cpy(s1):
     
     
 def value(s):
-#Returns the heuristic value of s
-    #if random.random()>0.1:
-    if True:
-        return random.random()*10
-    else:
-        return random.choice([LOSS,VICTORY,TIE])
+    if winningCase(s):
+        return VICTORY
+
+    return random.random()*10
         
 
 def printState(s):
