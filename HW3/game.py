@@ -48,7 +48,7 @@ def cpy(s1):
         s2.playTurn = s1.playTurn
         s2.size=s1.size
         s2.board=copy.deepcopy(s1.board)
-        print("board ", s2.board)
+        #print("board ", s2.board)
         return s2
     
     
@@ -228,15 +228,15 @@ def getNext(s):
 #returns a list of the next states of s
         ns=[]
         for c in list(range(columns)):
-            print("c=",c)
+            #print("c=",c)
             if s.board[0][c]==0:
-                print("possible move ", c)
+                #print("possible move ", c)
                 tmp=cpy(s)
                 makeMove(tmp, c)
-                print("tmp board=",tmp.board)
+                #print("tmp board=",tmp.board)
                 ns+=[tmp]
-                print("ns=",ns)
-        print("returns ns ", ns)
+                #print("ns=",ns)
+        #print("returns ns ", ns)
         return ns
 
 def inputComputer(s):    
