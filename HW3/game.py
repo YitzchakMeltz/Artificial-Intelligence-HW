@@ -61,6 +61,9 @@ def value(s):
     if losingCase(s):
         return LOSS
 
+    if compThreeCase(s):
+        return 50
+
     return random.random()*10
         
 
@@ -256,9 +259,8 @@ def winningCase(s):
             countComp=0
             for j in range(columns):
                 if s.board[i][j]==COMPUTER:
-                    countHuman=0
                     countComp+=1
-                if s.board[i][j]==0:
+                if s.board[i][j]==0 or s.board[i][j]==HUMAN:
                     countComp=0
                 if countComp==4:
                     return True
@@ -269,7 +271,7 @@ def winningCase(s):
             for i in range(rows):
                 if s.board[i][j]==COMPUTER:
                     countComp+=1
-                if s.board[i][j]==0:
+                if s.board[i][j]==0 or s.board[i][j]==HUMAN:
                     countComp=0
                 if countComp==4:
                     return True
@@ -282,7 +284,7 @@ def winningCase(s):
             for j in range(0, count):
                 if s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
                     countComp+=1
-                if s.board[min(rows, line) - j - 1][start_col + j]==0:
+                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
                     countComp=0
                 if countComp==4:
                     return True
@@ -298,7 +300,7 @@ def winningCase(s):
             for j in range(len(ans[i])):
                 if ans[i][j]==COMPUTER:
                     countComp+=1
-                if ans[i][j]==0:
+                if ans[i][j]==0 or ans[i][j]==HUMAN:
                     countComp=0
                 if countComp==4:
                     return True
@@ -312,7 +314,7 @@ def losingCase(s):
             for j in range(columns):
                 if s.board[i][j]==HUMAN:
                     countHuman+=1
-                if s.board[i][j]==0:
+                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
                     countHuman=0
                 if countHuman==4:
                     return True
@@ -323,7 +325,7 @@ def losingCase(s):
             for i in range(rows):
                 if s.board[i][j]==HUMAN:
                     countHuman+=1
-                if s.board[i][j]==0:
+                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
                     countHuman=0
                 if countHuman==4:
                     return True
@@ -336,7 +338,7 @@ def losingCase(s):
             for j in range(0, count):
                 if s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
                     countHuman+=1
-                if s.board[min(rows, line) - j - 1][start_col + j]==0:
+                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
                     countHuman=0
                 if countHuman==4:
                     return True
@@ -352,8 +354,69 @@ def losingCase(s):
             for j in range(len(ans[i])):
                 if ans[i][j]==HUMAN:
                     countHuman+=1
-                if ans[i][j]==0:
+                if ans[i][j]==0 or ans[i][j]==COMPUTER:
                     countHuman=0
                 if countHuman==4:
                     return True
+        return False
+
+def compThreeCase(s):
+    # Check Rows for final state
+        for i in range(rows):
+            emptySlot = False
+            countComp=0
+            for j in range(columns):
+                if s.board[i][j]==COMPUTER:
+                    countComp+=1
+                    #check that there's an empty slot to make it four
+                    if j!=0 and s.board[i][j-1]==0:
+                        emptySlot=True
+                    if j!=(columns-1) and s.board[i][j+1]==0:
+                        emptySlot=True
+                if s.board[i][j]==0 or s.board[i][j]==HUMAN:
+                    countComp=0
+                    emptySlot=False
+                if countComp==3 and emptySlot:
+                    return True
+
+        # Check Columns for final state
+        for j in range(columns):
+            countComp=0
+            for i in range(rows):
+                if s.board[i][j]==COMPUTER:
+                    countComp+=1
+                if s.board[i][j]==0 or s.board[i][j]==HUMAN:
+                    countComp=0
+                if countComp==3:
+                    return True
+
+        # Check Upward Diagonal for final state
+        for line in range(1, (rows + columns)):
+            countComp=0
+            start_col = max(0, line - rows)
+            count = min(line, (columns - start_col), rows)
+            for j in range(0, count):
+                if s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
+                    countComp+=1
+                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
+                    countComp=0
+                if countComp==3:
+                    return True
+
+        # Check Downward Diagonal for final state
+        ans = [[] for i in range(rows + columns - 1)]
+        for i in range(rows):
+            for j in range(columns):
+                ans[i - j + 3].append(s.board[i][j])
+
+        for i in range(len(ans)):
+            countComp=0
+            for j in range(len(ans[i])):
+                if ans[i][j]==COMPUTER:
+                    countComp+=1
+                if ans[i][j]==0 or ans[i][j]==HUMAN:
+                    countComp=0
+                if countComp==3:
+                    return True
+        
         return False
