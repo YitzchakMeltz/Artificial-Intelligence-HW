@@ -61,6 +61,12 @@ def value(s):
     if losingCase(s):
         return LOSS
 
+    if compThreeCaseTrap(s):
+        return 5000
+
+    if humanDoubleTrapping(s):
+        return -5000
+
     if compThreeCase(s):
         return 500
 
@@ -361,7 +367,7 @@ def losingCase(s):
         return False
 
 def compThreeCase(s):
-    # Check Rows for final state
+        # Check Rows for final state
         for i in range(rows):
             emptySlot = False
             countComp=0
@@ -431,6 +437,96 @@ def compThreeCase(s):
                 if countComp==3:
                     return True
         
+        return False
+
+def compThreeCaseTrap(s):
+        # Check Rows for final state
+        for i in range(rows):
+            emptySlot = False
+            fillableLeft= False
+            fillableRight = False
+            countComp=0
+            for j in range(columns):
+                if s.board[i][j]==COMPUTER:
+                    countComp+=1
+                    #check that there's an empty slot to make it four
+                    if j!=0 and s.board[i][j-1]==0 and (i==0 or s.board[i-1][j-1]!=0):
+                        emptySlot=True
+                        fillableLeft=True
+                    if j!=(columns-1) and s.board[i][j+1]==0 and (i==0 or s.board[i-1][j+1]!=0):
+                        emptySlot=True
+                        fillableRight=True
+                if s.board[i][j]==0 or s.board[i][j]==HUMAN:
+                    countComp=0
+                    emptySlot=False
+                    fillableRight=False
+                    fillableLeft=False
+                if countComp==3 and emptySlot and fillableLeft and fillableRight:
+                    return True
+
+        # Check Upward Diagonal for final state
+        for line in range(1, (rows + columns)):
+            emptySlot = False
+            countComp=0
+            start_col = max(0, line - rows)
+            count = min(line, (columns - start_col), rows)
+            for j in range(0, count):
+                if s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
+                    countComp+=1
+                     #check that there's an empty slot to make it four
+                    if (min(rows, line) - j < i) and (start_col + j < j - 1) and s.board[min(rows, line) - j][start_col + j + 1]==0:
+                        emptySlot=True
+                    if (min(rows, line) - j - 1> 0) and (start_col + j > 0) and s.board[min(rows, line) - j - 2][start_col + j - 1]==0:
+                        emptySlot=True
+                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
+                    countComp=0
+                    emptySlot=False
+                if countComp==3 and emptySlot:
+                    return True
+
+        # Check Downward Diagonal for final state
+        ans = [[] for i in range(rows + columns - 1)]
+        for i in range(rows):
+            for j in range(columns):
+                ans[i - j + 3].append(s.board[i][j])
+
+        for i in range(len(ans)):
+            countComp=0
+            for j in range(len(ans[i])):
+                if ans[i][j]==COMPUTER:
+                    countComp+=1
+                if ans[i][j]==0 or ans[i][j]==HUMAN:
+                    countComp=0
+                if countComp==3:
+                    return True
+        
+        return False
+
+def humanDoubleTrapping(s):
+    # Check Rows for final state
+        for i in range(rows):
+            emptySlot = False
+            fillableLeft= False
+            fillableRight = False
+            countHuman=0
+            for j in range(columns):
+                if s.board[i][j]==HUMAN:
+                    countHuman+=1
+                    #check that there's an empty slot to make it three double trap
+                    if j!=0 and s.board[i][j-1]==0 and (i==0 or s.board[i-1][j-1]!=0):
+                        emptySlot=True
+                        fillableLeft=True
+                    if j!=(columns-1) and s.board[i][j+1]==0 and (i==0 or s.board[i-1][j+1]!=0):
+                        emptySlot=True
+                        fillableRight=True
+                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
+                    countHuman=0
+                    emptySlot=False
+                    fillableLeft=False
+                    fillableRight=False
+                if countHuman==2 and emptySlot and fillableLeft and fillableRight:
+                    return True
+
         return False
 
 def boardValue(s):
