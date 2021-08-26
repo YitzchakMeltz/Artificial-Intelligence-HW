@@ -381,26 +381,38 @@ def compThreeCase(s):
 
         # Check Columns for final state
         for j in range(columns):
+            emptySlot = False
             countComp=0
             for i in range(rows):
                 if s.board[i][j]==COMPUTER:
                     countComp+=1
+                    #check that there's an empty slot to make it four
+                    if i!=0 and s.board[i-1][j]==0:
+                        emptySlot=True
                 if s.board[i][j]==0 or s.board[i][j]==HUMAN:
                     countComp=0
-                if countComp==3:
+                    emptySlot=False
+                if countComp==3 and emptySlot:
                     return True
 
         # Check Upward Diagonal for final state
         for line in range(1, (rows + columns)):
+            emptySlot = False
             countComp=0
             start_col = max(0, line - rows)
             count = min(line, (columns - start_col), rows)
             for j in range(0, count):
                 if s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
                     countComp+=1
+                     #check that there's an empty slot to make it four
+                    if (min(rows, line) - j < i) and (start_col + j < j - 1) and s.board[min(rows, line) - j][start_col + j + 1]==0:
+                        emptySlot=True
+                    if (min(rows, line) - j - 1> 0) and (start_col + j > 0) and s.board[min(rows, line) - j - 2][start_col + j - 1]==0:
+                        emptySlot=True
                 if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
                     countComp=0
-                if countComp==3:
+                    emptySlot=False
+                if countComp==3 and emptySlot:
                     return True
 
         # Check Downward Diagonal for final state
