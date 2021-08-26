@@ -64,7 +64,7 @@ def value(s):
     if compThreeCase(s):
         return 500
 
-    return random.random()*10
+    return mapSmallestToLargest(boardValue(s))
         
 
 def printState(s):
@@ -420,3 +420,17 @@ def compThreeCase(s):
                     return True
         
         return False
+
+def boardValue(s):
+    sumOfValues=0
+    for i in range(rows):
+        for j in range(columns):
+            if s.board[i][j]==5:
+                sumOfValues += abs(j - (columns//2)) + abs(i-rows-1)
+
+    return sumOfValues
+
+def mapSmallestToLargest(num):
+    if num !=0:
+        return (1/num) * 110
+    return 1
