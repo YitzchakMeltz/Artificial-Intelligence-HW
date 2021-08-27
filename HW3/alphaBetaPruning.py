@@ -32,10 +32,10 @@ def abmax(gm, d, a, b):
     bestMove=0
     for st in ns:
         tmp=abmin(st,d-1,a,b)
-        if tmp[0]>v:
+        if tmp[0]>v: 
             v=tmp[0]
             bestMove=st
-        if v>=b:
+        if v>b:    #here?
             return [v,st]
         if v>a:
             a=v
