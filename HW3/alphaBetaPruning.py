@@ -67,7 +67,7 @@ def abmin(gm, d, a, b):
         if tmp[0]<v:
             v = tmp[0]
             bestMove = st
-        if v <= a:
+        if v < a:  #here?
             return [v,st]
         if v < b:
             b = v
