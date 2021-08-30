@@ -64,16 +64,14 @@ def value(s):
     totalBoardValue=0
 
     if compThreeCaseTrap(s):
-        totalBoardValue += 6000
+        totalBoardValue += 10**7
 
     if humanDoubleTrapping(s):
-        totalBoardValue -= 5000
+        totalBoardValue -= 10**6
 
-    if compThreeCase(s):
-        totalBoardValue += 500
+    totalBoardValue += compThreeCase(s)
 
-    if humanThreeCase(s):
-        totalBoardValue -= 450
+    totalBoardValue += humanThreeCase(s)
 
     return totalBoardValue + mapSmallestToLargest(boardValue(s))
         
@@ -373,6 +371,9 @@ def losingCase(s):
         return False
 
 def compThreeCase(s):
+        #total sum of board value
+        totalSum=0
+
         # Check Rows for final state
         for i in range(rows):
             emptySlot = False
@@ -403,7 +404,7 @@ def compThreeCase(s):
                 if countComp==3 and emptySlot:
                     if right==0 and left==0:
                         return 500
-                    return 500 + 
+                    totalSum += 500 + 2*mapSmallestToLargest(right) + 2*mapSmallestToLargest(left)
 
         # Check Columns for final state
         for j in range(columns):
@@ -419,7 +420,7 @@ def compThreeCase(s):
                     countComp=0
                     emptySlot=False
                 if countComp==3 and emptySlot:
-                    return True
+                    totalSum += 500
 
         # Check Upward Diagonal for final state
         for line in range(1, (rows + columns)):
@@ -439,7 +440,7 @@ def compThreeCase(s):
                     countComp=0
                     emptySlot=False
                 if countComp==3 and emptySlot:
-                    return True
+                    totalSum += 500
 
         # Check Downward Diagonal for final state
         ans = [[] for i in range(rows + columns - 1)]
@@ -455,14 +456,19 @@ def compThreeCase(s):
                 if ans[i][j]==0 or ans[i][j]==HUMAN:
                     countComp=0
                 if countComp==3:
-                    return True
+                    totalSum += 500
         
-        return False
+        return totalSum
 
 def humanThreeCase(s):
+        #total sum of board value
+        totalSum=0
+
         # Check Rows for final state
         for i in range(rows):
             emptySlot = False
+            left=0
+            right=0
             countHuman=0
             for j in range(columns):
                 if s.board[i][j]==HUMAN:
@@ -470,13 +476,25 @@ def humanThreeCase(s):
                     #check that there's an empty slot to make it four
                     if j!=0 and s.board[i][j-1]==0:
                         emptySlot=True
+                        lower=i-1
+                        while lower>0 and s.board[lower][j-1]==0:
+                            left-=1
+                            lower-=1
                     if j!=(columns-1) and s.board[i][j+1]==0:
                         emptySlot=True
+                        lower=i-1
+                        while lower>0 and s.board[lower][j+1]==0:
+                            right-=1
+                            lower-=1
                 if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
                     countHuman=0
+                    right=0
+                    lower=0
                     emptySlot=False
                 if countHuman==3 and emptySlot:
-                    return True
+                    if right==0 and left==0:
+                        return -500
+                    totalSum -= (500 + 2*mapSmallestToLargest(right) + 2*mapSmallestToLargest(left))
 
         # Check Columns for final state
         for j in range(columns):
@@ -492,7 +510,7 @@ def humanThreeCase(s):
                     countHuman=0
                     emptySlot=False
                 if countHuman==3 and emptySlot:
-                    return True
+                    totalSum -= 500
 
         # Check Upward Diagonal for final state
         for line in range(1, (rows + columns)):
@@ -512,7 +530,7 @@ def humanThreeCase(s):
                     countHuman=0
                     emptySlot=False
                 if countHuman==3 and emptySlot:
-                    return True
+                    totalSum -= 500
 
         # Check Downward Diagonal for final state
         ans = [[] for i in range(rows + columns - 1)]
@@ -528,9 +546,9 @@ def humanThreeCase(s):
                 if ans[i][j]==0 or ans[i][j]==COMPUTER:
                     countHuman=0
                 if countHuman==3:
-                    return True
+                    totalSum -= 500
         
-        return False
+        return totalSum
 
 def compThreeCaseTrap(s):
         # Check Rows for final state
