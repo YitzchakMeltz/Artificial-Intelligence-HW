@@ -72,12 +72,16 @@ def value(s):
     if compThreeCase(s):
         totalBoardValue += 500
 
+    if humanThreeCase(s):
+        totalBoardValue -= 450
+
     return totalBoardValue + mapSmallestToLargest(boardValue(s))
         
 
 def printState(s):
 #Prints the board. The empty cells are printed as numbers = the cells name(for input)
 #If the game ended prints who won.
+        print("Value",value(s))
         for r in range(rows):
             print("\n|",end="")
         #print("\n",len(s[0][0])*" --","\n|",sep="", end="")
@@ -372,6 +376,8 @@ def compThreeCase(s):
         # Check Rows for final state
         for i in range(rows):
             emptySlot = False
+            left=0
+            right=0
             countComp=0
             for j in range(columns):
                 if s.board[i][j]==COMPUTER:
@@ -379,13 +385,25 @@ def compThreeCase(s):
                     #check that there's an empty slot to make it four
                     if j!=0 and s.board[i][j-1]==0:
                         emptySlot=True
+                        lower=i-1
+                        while lower>0 and s.board[lower][j-1]==0:
+                            left+=1
+                            lower-=1
                     if j!=(columns-1) and s.board[i][j+1]==0:
                         emptySlot=True
+                        lower=i-1
+                        while lower>0 and s.board[lower][j+1]==0:
+                            right+=1
+                            lower-=1
                 if s.board[i][j]==0 or s.board[i][j]==HUMAN:
                     countComp=0
                     emptySlot=False
+                    right=0
+                    left=0
                 if countComp==3 and emptySlot:
-                    return True
+                    if right==0 and left==0:
+                        return 500
+                    return 500 + 
 
         # Check Columns for final state
         for j in range(columns):
@@ -437,6 +455,79 @@ def compThreeCase(s):
                 if ans[i][j]==0 or ans[i][j]==HUMAN:
                     countComp=0
                 if countComp==3:
+                    return True
+        
+        return False
+
+def humanThreeCase(s):
+        # Check Rows for final state
+        for i in range(rows):
+            emptySlot = False
+            countHuman=0
+            for j in range(columns):
+                if s.board[i][j]==HUMAN:
+                    countHuman+=1
+                    #check that there's an empty slot to make it four
+                    if j!=0 and s.board[i][j-1]==0:
+                        emptySlot=True
+                    if j!=(columns-1) and s.board[i][j+1]==0:
+                        emptySlot=True
+                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
+                    countHuman=0
+                    emptySlot=False
+                if countHuman==3 and emptySlot:
+                    return True
+
+        # Check Columns for final state
+        for j in range(columns):
+            emptySlot = False
+            countHuman=0
+            for i in range(rows):
+                if s.board[i][j]==HUMAN:
+                    countHuman+=1
+                    #check that there's an empty slot to make it four
+                    if i!=0 and s.board[i-1][j]==0:
+                        emptySlot=True
+                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
+                    countHuman=0
+                    emptySlot=False
+                if countHuman==3 and emptySlot:
+                    return True
+
+        # Check Upward Diagonal for final state
+        for line in range(1, (rows + columns)):
+            emptySlot = False
+            countHuman=0
+            start_col = max(0, line - rows)
+            count = min(line, (columns - start_col), rows)
+            for j in range(0, count):
+                if s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
+                    countHuman+=1
+                     #check that there's an empty slot to make it four
+                    if (min(rows, line) - j < i) and (start_col + j < j - 1) and s.board[min(rows, line) - j][start_col + j + 1]==0:
+                        emptySlot=True
+                    if (min(rows, line) - j - 1> 0) and (start_col + j > 0) and s.board[min(rows, line) - j - 2][start_col + j - 1]==0:
+                        emptySlot=True
+                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
+                    countHuman=0
+                    emptySlot=False
+                if countHuman==3 and emptySlot:
+                    return True
+
+        # Check Downward Diagonal for final state
+        ans = [[] for i in range(rows + columns - 1)]
+        for i in range(rows):
+            for j in range(columns):
+                ans[i - j + 3].append(s.board[i][j])
+
+        for i in range(len(ans)):
+            countHuman=0
+            for j in range(len(ans[i])):
+                if ans[i][j]==HUMAN:
+                    countHuman+=1
+                if ans[i][j]==0 or ans[i][j]==COMPUTER:
+                    countHuman=0
+                if countHuman==3:
                     return True
         
         return False
