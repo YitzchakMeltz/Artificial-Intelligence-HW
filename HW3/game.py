@@ -61,16 +61,18 @@ def value(s):
     if losingCase(s):
         return LOSS
 
+    totalBoardValue=0
+
     if compThreeCaseTrap(s):
-        return 5000
+        totalBoardValue += 6000
 
     if humanDoubleTrapping(s):
-        return -5000
+        totalBoardValue -= 5000
 
     if compThreeCase(s):
-        return 500
+        totalBoardValue += 500
 
-    return mapSmallestToLargest(boardValue(s))
+    return totalBoardValue + mapSmallestToLargest(boardValue(s))
         
 
 def printState(s):
