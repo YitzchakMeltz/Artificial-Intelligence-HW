@@ -68,7 +68,7 @@ def value(s):
         totalBoardValue += 10**7
 
     if humanDoubleTrapping(s):
-        totalBoardValue -= 10**7
+        totalBoardValue -= 10**6
 
     totalBoardValue += compThreeCase(s)
 
@@ -566,10 +566,10 @@ def compThreeCaseTrap(s):
                 if s.board[i][j]==COMPUTER:
                     countComp+=1
                     #check that there's an empty slot to make it four
-                    if j!=0 and s.board[i][j-1]==0 and (i==0 or s.board[i-1][j-1]!=0):
+                    if j!=0 and s.board[i][j-1]==0 and (i==rows-1 or s.board[i+1][j-1]!=0):
                         emptySlot=True
                         fillableLeft=True
-                    if j!=(columns-1) and s.board[i][j+1]==0 and (i==0 or s.board[i-1][j+1]!=0):
+                    if j!=(columns-1) and s.board[i][j+1]==0 and (i==rows-1 or s.board[i+1][j+1]!=0):
                         emptySlot=True
                         fillableRight=True
                 if s.board[i][j]==0 or s.board[i][j]==HUMAN:
@@ -629,10 +629,10 @@ def humanDoubleTrapping(s):
                 if s.board[i][j]==HUMAN:
                     countHuman+=1
                     #check that there's an empty slot to make it three double trap
-                    if j!=0 and s.board[i][j-1]==0 and (i==0 or s.board[i-1][j-1]!=0):
+                    if j!=0 and s.board[i][j-1]==0 and (i==rows-1 or s.board[i+1][j-1]!=0):
                         emptySlot=True
                         fillableLeft=True
-                    if j!=(columns-1) and s.board[i][j+1]==0 and (i==0 or s.board[i-1][j+1]!=0):
+                    if j!=(columns-1) and s.board[i][j+1]==0 and (i==rows-1 or s.board[i+1][j+1]!=0):
                         emptySlot=True
                         fillableRight=True
                 if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
