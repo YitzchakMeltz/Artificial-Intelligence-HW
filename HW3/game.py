@@ -2,6 +2,7 @@ import copy
 import alphaBetaPruning
 from heuristics import*
 import random
+import time
 
 VICTORY=10**20 #The value of a winning board (for max) 
 LOSS = -VICTORY #The value of a losing board (for max)
@@ -67,11 +68,15 @@ def value(s):
         totalBoardValue += 10**7
 
     if humanDoubleTrapping(s):
-        totalBoardValue -= 10**6
+        totalBoardValue -= 10**7
 
     totalBoardValue += compThreeCase(s)
 
     totalBoardValue += humanThreeCase(s)
+
+    totalBoardValue += doubleThreat(s,'C')
+
+    totalBoardValue += doubleThreat(s,'H')
 
     return totalBoardValue + mapSmallestToLargest(boardValue(s))
         
@@ -640,7 +645,58 @@ def humanDoubleTrapping(s):
 
         return False
 
-def doubleThreat(s):
+def doubleThreat(s,player):
+    THREAT = 10
+    FILLED = 20
+    EMPTY = 30
+    
+    sumValue=0
+
+    threatBoard = createThreatBoard(s,player)
+
+    for j in range(columns-1,0,-1):
+        countHeight = 0
+        countThreats = 0
+        for i in range(rows-1,0,-1):
+            if threatBoard[i][j] == THREAT:
+                countThreats += 1
+            if threatBoard[i][j] == EMPTY or threatBoard[i][j] == FILLED:
+                countThreats = 0
+            if countThreats == 2:
+                for k in range(i+1,0,-1):
+                    if threatBoard[k][j] == EMPTY:
+                        countHeight += 1
+                if player == 'C':
+                    sumValue += 6000 + 2*mapSmallestToLargest(countHeight)
+                if player == 'H':
+                    sumValue -= 6000 + 2*mapSmallestToLargest(countHeight)
+
+    return sumValue
+
+
+def boardValue(s):
+    sumOfValues=0
+    for i in range(rows):
+        for j in range(columns):
+            if s.board[i][j]==5:
+                sumOfValues += abs(j - (columns//2)) + abs(i-rows-1)
+
+    return sumOfValues
+
+def mapSmallestToLargest(num):
+    if num !=0:
+        return (1/num) * 110
+    return 1
+
+def createThreatBoard(s,player):
+    if player == 'C':
+        OUR_SIDE=COMPUTER
+        AGAINST=HUMAN
+    else:
+        OUR_SIDE=HUMAN
+        AGAINST=COMPUTER
+
+    #create threat board
     threatBoard=[]
     for i in range(rows):
             threatBoard = threatBoard+[columns*[0]]
@@ -653,22 +709,21 @@ def doubleThreat(s):
         for j in range(columns):
             threatBoard[i][j]=EMPTY
 
-
-    totalSum=0
+    #fill threat board
     # Check Rows for final state
         for i in range(rows):
             emptySlotRight = False
             emptySlotLeft = False
             countHuman=0
             for j in range(columns):
-                if s.board[i][j]==HUMAN:
+                if s.board[i][j]==OUR_SIDE:
                     countHuman+=1
                     #check that there's an empty slot to make it four
                     if j!=0 and s.board[i][j-1]==0:
                         emptySlotLeft=True
                     if j!=(columns-1) and s.board[i][j+1]==0:
                         emptySlotRight=True
-                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
+                if s.board[i][j]==0 or s.board[i][j]==AGAINST:
                     countHuman=0
                     emptySlotRight=False
                     emptySlotLeft-False
@@ -688,19 +743,18 @@ def doubleThreat(s):
                             if s.board[lower][j+1]==COMPUTER or s.board[lower][j+1]==HUMAN:
                                 threatBoard[lower][j+1] = FILLED
                             lower -= 1
-
                     
         # Check Columns for final state
         for j in range(columns):
             emptySlot = False
             countHuman=0
             for i in range(rows):
-                if s.board[i][j]==HUMAN:
+                if s.board[i][j]==OUR_SIDE:
                     countHuman+=1
                     #check that there's an empty slot to make it four
                     if i!=0 and s.board[i-1][j]==0:
                         emptySlot=True
-                if s.board[i][j]==0 or s.board[i][j]==COMPUTER:
+                if s.board[i][j]==0 or s.board[i][j]==AGAINST:
                     countHuman=0
                     emptySlot=False
                 if countHuman==3 and emptySlot:
@@ -709,6 +763,7 @@ def doubleThreat(s):
                         lower = i-1
                         while lower<rows:
                             threatBoard[lower][j]=FILLED
+                            lower += 1
 
         # Check Upward Diagonal for final state
         for line in range(1, (rows + columns)):
@@ -718,49 +773,27 @@ def doubleThreat(s):
             start_col = max(0, line - rows)
             count = min(line, (columns - start_col), rows)
             for j in range(0, count):
-                if s.board[min(rows, line) - j - 1][start_col + j]==HUMAN:
+                if s.board[min(rows, line) - j - 1][start_col + j]==OUR_SIDE:
                     countHuman+=1
                      #check that there's an empty slot to make it four
                     if (min(rows, line) - j < i) and (start_col + j < j - 1) and s.board[min(rows, line) - j][start_col + j + 1]==0:
                         emptySlotLeft=True
                     if (min(rows, line) - j - 1> 0) and (start_col + j > 0) and s.board[min(rows, line) - j - 2][start_col + j - 1]==0:
                         emptySlotRight=True
-                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==COMPUTER:
+                if s.board[min(rows, line) - j - 1][start_col + j]==0 or s.board[min(rows, line) - j - 1][start_col + j]==AGAINST:
                     countHuman=0
                     emptySlotRight=False
                     emptySlotLeft=False
-                if countHuman==3 and emptySlot:
-                    totalSum -= 500
-
-        # Check Downward Diagonal for final state
-        ans = [[] for i in range(rows + columns - 1)]
-        for i in range(rows):
-            for j in range(columns):
-                ans[i - j + 3].append(s.board[i][j])
-
-        for i in range(len(ans)):
-            countHuman=0
-            for j in range(len(ans[i])):
-                if ans[i][j]==HUMAN:
-                    countHuman+=1
-                if ans[i][j]==0 or ans[i][j]==COMPUTER:
-                    countHuman=0
-                if countHuman==3:
-                    totalSum -= 500
-        
-        return totalSum
-
-
-def boardValue(s):
-    sumOfValues=0
-    for i in range(rows):
-        for j in range(columns):
-            if s.board[i][j]==5:
-                sumOfValues += abs(j - (columns//2)) + abs(i-rows-1)
-
-    return sumOfValues
-
-def mapSmallestToLargest(num):
-    if num !=0:
-        return (1/num) * 110
-    return 1
+                if countHuman==3 and emptySlotLeft:
+                    lower = 1
+                    while min(rows, line) - j - lower >=0:
+                        if s.board[min(rows, line) - j - lower][start_col + j + 1]==COMPUTER or s.board[min(rows, line) - j - lower][start_col + j + 1]==HUMAN:
+                            threatBoard[min(rows, line) - j - lower][start_col + j + 1] = FILLED
+                        lower -= 1
+                if countHuman==3 and emptySlotRight:
+                    lower = 1
+                    while (min(rows, line) - j - 2 - lower) > rows:
+                        if s.board[min(rows, line) - j - 2 - lower][start_col + j - 1]==COMPUTER or s.board[min(rows, line) - j - 2 - lower][start_col + j - 1]==HUMAN:
+                            threatBoard[min(rows, line) - j - 2 - lower][start_col + j - 1] = FILLED
+                        lower -= 1
+    return threatBoard
