@@ -37,6 +37,7 @@ while not game.isFinished(board):
 
     if game.isFinished(board):
         gameGUI.print_gameover_msg(winner)
-        gameGUI.sleep_screen(15)
+        while col != -2:
+            col = gameGUI.handle_events()
 
 print("Game Over:")
