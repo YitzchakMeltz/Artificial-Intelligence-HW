@@ -203,9 +203,9 @@ def isHumTurn(s):
     
 
 
-def decideWhoIsFirst(s):
+def decideWhoIsFirst(s,turn):
 #The user decides who plays first
-        if int(input("Who plays first? 1-me / anything else-you : "))==1:
+        if turn == COMPUTER:
             s.playTurn=COMPUTER
         else:
             s.playTurn=HUMAN
