@@ -1,6 +1,5 @@
 import copy
 import alphaBetaPruning
-from heuristics import*
 import random
 import time
 
@@ -13,7 +12,6 @@ HUMAN=1 #Marks the human's cells on the board
 
 rows=6
 columns=7
-
 
 class game:
     board=[]
@@ -107,10 +105,13 @@ def printState(s):
 
         if val==VICTORY:
             print("I won!")
+            return COMPUTER
         elif val==LOSS:
             print("You beat me!")
+            return HUMAN
         elif val==TIE:
             print("It's a TIE")
+        return TIE
 
 
 
@@ -229,13 +230,14 @@ def makeMove(s, c):
             s.playTurn = COMPUTER
 
    
-def inputMove(s):
+def inputMove(s,col):
 #Reads, enforces legality and executes the user's move.
 
         #self.printState()
         flag=True
         while flag:
-            c=int(input("Enter your next move: "))
+            #c=int(input("Enter your next move: "))
+            c=col
             if c<0 or c>=columns or s.board[0][c]!=0:
                 print("Illegal move.")
 
@@ -797,3 +799,6 @@ def createThreatBoard(s,player):
                             threatBoard[min(rows, line) - j - 2 - lower][start_col + j - 1] = FILLED
                         lower -= 1
     return threatBoard
+
+    #====================================================================
+    #=============================== GUI ================================
