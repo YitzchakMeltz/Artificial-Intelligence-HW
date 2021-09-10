@@ -1,4 +1,5 @@
 import pygame
+from pygame import gfxdraw
 import game
 import math
 from game import*
@@ -32,6 +33,10 @@ GRAY = (220,220,220)
 width = COLUMNS * SQUARESIZE  + WOFFSET*2
 height = (ROWS + 1) * SQUARESIZE + HOFFSET + PADDING
 
+def draw_circle(surface, x, y, radius, color):
+    gfxdraw.aacircle(surface, x, y, radius, color)
+    gfxdraw.filled_circle(surface, x, y, radius, color)
+
 def start_page():
     pygame.draw.rect(screen,GRAY,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)-(BUTTON_HEIGHT/2), BUTTON_WIDTH, BUTTON_HEIGHT))
     pygame.draw.rect(screen,GRAY,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)+BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT))
@@ -41,15 +46,15 @@ def draw_board(board):
     for c in range(COLUMNS):
         for r in range(ROWS):
             pygame.draw.rect(screen, BLUE, (WOFFSET + c*SQUARESIZE, HOFFSET + r*SQUARESIZE+SQUARESIZE, SQUARESIZE, SQUARESIZE))
-            pygame.draw.circle(screen, WHITE, (int(WOFFSET + c*SQUARESIZE+SQUARESIZE/2), int(HOFFSET + r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2)), RADIUS)
+            draw_circle(screen, int(WOFFSET + c*SQUARESIZE+SQUARESIZE/2), int(HOFFSET + r*SQUARESIZE+SQUARESIZE+SQUARESIZE/2), RADIUS, WHITE)
 
     if board:
         for c in range(COLUMNS):
             for r in range(ROWS):		
                 if board[r][c] == COMPUTER:
-                    pygame.draw.circle(screen, RED, (int(WOFFSET + c*SQUARESIZE+SQUARESIZE/2), int(HOFFSET + (r+1)*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+                    draw_circle(screen, int(WOFFSET + c*SQUARESIZE+SQUARESIZE/2), int(HOFFSET + (r+1)*SQUARESIZE+SQUARESIZE/2), RADIUS, RED)
                 elif board[r][c] == HUMAN: 
-                    pygame.draw.circle(screen, YELLOW, (int(WOFFSET + c*SQUARESIZE+SQUARESIZE/2), int(HOFFSET + (r+1)*SQUARESIZE+SQUARESIZE/2)), RADIUS)
+                    draw_circle(screen, int(WOFFSET + c*SQUARESIZE+SQUARESIZE/2), int(HOFFSET + (r+1)*SQUARESIZE+SQUARESIZE/2), RADIUS, YELLOW)
 
     pygame.display.update()
 
