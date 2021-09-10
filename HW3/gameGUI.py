@@ -21,6 +21,8 @@ HUMAN = 1 #Marks the human's cells on the board
 TIE=0 #The value of a tie
 
 BLUE = (0,0,255)
+HOVER_BLUE = (170,195,224)
+CLICK_BLUE = (150,175,204)
 BLACK = (0,0,0)
 RED = (255,0,0)
 YELLOW = (255,255,0)
@@ -60,16 +62,41 @@ def button_click():
             sys.exit()
             return col
 
+        if event.type == pygame.MOUSEMOTION:
+            posx = event.pos[0]
+            posy = event.pos[1]
+            if posx>191 and posx<389:
+                if posy>279 and posy<337:
+                    pygame.draw.rect(screen,HOVER_BLUE,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)-(BUTTON_HEIGHT/2), BUTTON_WIDTH, BUTTON_HEIGHT))
+                    user_text()
+                elif posy>368 and posy<427:
+                    pygame.draw.rect(screen,HOVER_BLUE,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)+BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT))
+                    computer_text()
+                else:
+                    screen.fill(WHITE)
+                    start_page()
+            else:
+                screen.fill(WHITE)
+                start_page()
+
+        pygame.display.update()
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             posx = event.pos[0]
             posy = event.pos[1]
 
             if posx>191 and posx<389:
                 if posy>279 and posy<337:
+                    pygame.draw.rect(screen,CLICK_BLUE,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)-(BUTTON_HEIGHT/2), BUTTON_WIDTH, BUTTON_HEIGHT))
+                    user_text()
+                    pygame.display.update()
                     clicked = HUMAN
                     filename = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW3/buttonPress.wav'
                     winsound.PlaySound(filename, winsound.SND_FILENAME)
                 if posy>368 and posy<427:
+                    pygame.draw.rect(screen,CLICK_BLUE,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)+BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT))
+                    computer_text()
+                    pygame.display.update()
                     clicked = COMPUTER
                     filename = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW3/buttonPress.wav'
                     winsound.PlaySound(filename, winsound.SND_FILENAME)
@@ -96,14 +123,24 @@ def sleep_screen(sec):
     pygame.time.wait(sec*1000)
 
 def start_msg():
+    who_starts_text()
+    start_button_text()
+
+def start_button_text():
+    user_text()
+    computer_text()
+
+def who_starts_text():
     myfont = pygame.font.SysFont("calibry", 75)
     label = myfont.render("Who Starts?", 1, BLACK)
     screen.blit(label, (140,110))
 
+def user_text():
     myfont = pygame.font.SysFont("calibry", 30)
     label = myfont.render("USER", 1, BLACK)
     screen.blit(label, (262,int(height/2)-(BUTTON_HEIGHT/2)+22))
 
+def computer_text():
     myfont = pygame.font.SysFont("calibry", 30)
     label = myfont.render("COMPUTER", 1, BLACK)
     screen.blit(label, (230,int(height/2)+(BUTTON_HEIGHT/2)+52))
