@@ -427,7 +427,7 @@ def compThreeCase(s):
                     countComp=0
                     emptySlot=False
                 if countComp==3 and emptySlot:
-                    totalSum += 500
+                    totalSum += 300
 
         # Check Upward Diagonal for final state
         for line in range(1, (rows + columns)):
@@ -517,7 +517,7 @@ def humanThreeCase(s):
                     countHuman=0
                     emptySlot=False
                 if countHuman==3 and emptySlot:
-                    totalSum -= 500
+                    totalSum -= 300
 
         # Check Upward Diagonal for final state
         for line in range(1, (rows + columns)):
