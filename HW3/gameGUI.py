@@ -91,15 +91,11 @@ def button_click():
                     user_text()
                     pygame.display.update()
                     clicked = HUMAN
-                    filename = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW3/buttonPress.wav'
-                    winsound.PlaySound(filename, winsound.SND_FILENAME)
                 if posy>368 and posy<427:
                     pygame.draw.rect(screen,CLICK_BLUE,pygame.Rect(int(width/2)-(BUTTON_WIDTH/2), int(height/2)+BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT))
                     computer_text()
                     pygame.display.update()
                     clicked = COMPUTER
-                    filename = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW3/buttonPress.wav'
-                    winsound.PlaySound(filename, winsound.SND_FILENAME)
 
     return clicked
 
@@ -170,6 +166,10 @@ def set_screen(ScreenType):
         screen.fill(WHITE)
         draw_board(game.board)
     pygame.display.update()
+
+def button_press_sound():
+    filename = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW3/buttonPress.wav'
+    winsound.PlaySound(filename, winsound.SND_FILENAME)
 
 def drop_sound():
     filename = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW3/drop.wav'

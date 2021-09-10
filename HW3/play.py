@@ -15,6 +15,7 @@ while(goesFirst == -1):
 game.decideWhoIsFirst(board,goesFirst)
 
 gameGUI.set_screen("Game Screen")
+gameGUI.button_press_sound()
 
 while not game.isFinished(board):
     col = gameGUI.handle_events()
