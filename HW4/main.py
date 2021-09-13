@@ -55,3 +55,34 @@ for vec in dataset[1:]:
     obj.dist = distance
     obj.tag = vec[-1]
     eucDistances.append(obj)
+
+#================================ Q1.6 ================================
+eucDistances.sort(key=lambda x: x.dist) 
+
+#================================ Q1.7 ================================
+print("Point: ",point[:-1]) # print the point to calculate distance from
+
+for vec in dataset[1:]:
+    print(vec[:-1],' Distance: ',euclideanDistance(point, vec, len(vec)-1))
+
+#================================ Q1.8 ================================
+print('\nFor K=1 the tag is: ',eucDistances[0].tag,'\n')
+
+#================================ Q1.9 ================================
+tagCounterM = 0
+tagCounterF = 0
+
+for i in range(3):
+    if eucDistances[i].tag == 'M':
+        tagCounterM += 1
+    if eucDistances[i].tag == 'F':
+        tagCounterF += 1
+
+if tagCounterM >= 2:
+    print('\nFor K=3 the tag is: M\n')
+
+elif tagCounterF >= 2:
+    print('\nFor K=3 the tag is: F\n')
+
+else:
+    print("ERROR\nInsufficent Information\n")
