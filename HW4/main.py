@@ -25,7 +25,7 @@ def euclideanDistance(instance1, instance2, length):
          distance += pow(num1-num2, 2)
    return math.sqrt(distance)
 
-print('Distance between vectors: ',euclideanDistance(data1,data2,3),'\n')
+print('Distance between vectors: ',euclideanDistance(data1,data2,len(data2)-1),'\n')
 
 #================================ Q1.4 ================================
 with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfile:
@@ -37,7 +37,7 @@ dataset = dataWithHeader[1:]
 
 printVector(dataset[0])
 printVector(dataset[1])
-distance = euclideanDistance(dataset[0],dataset[1],3)
+distance = euclideanDistance(dataset[0],dataset[1],len(dataset[1])-1)
 print('Distance between vectors: ',distance,'\n')
 
 #================================ Q1.5 ================================
@@ -45,11 +45,13 @@ class distClass:
     dist = -1 #distance of current point from test point
     tag = '-' #tag of current point
 
-obj = distClass()
-
 eucDistances = [] # list of distances, will hold objects of type distClass
 
 point = dataset[0]
-obj.dist = distance
-obj.tag = dataset[1][-1]
-eucDistances.append(obj)
+
+for vec in dataset[1:]:
+    obj = distClass()
+    distance = euclideanDistance(point, vec, len(vec)-1)
+    obj.dist = distance
+    obj.tag = vec[-1]
+    eucDistances.append(obj)
