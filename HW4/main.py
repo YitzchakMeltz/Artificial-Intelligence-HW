@@ -92,12 +92,12 @@ else:
 print('#================================ Q2 ================================')
 K = 3
 
-with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfileSrc:
-    lines1 = csv.reader(myCsvfileSrc)
+with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfileSrc1:
+    lines1 = csv.reader(myCsvfileSrc1)
     dataWithHeader1 = list(lines1)
 
-with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_test.csv', 'r') as myCsvfileDst:
-    lines2 = csv.reader(myCsvfileDst)
+with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_test.csv', 'r') as myCsvfileSrc2:
+    lines2 = csv.reader(myCsvfileSrc2)
     dataWithHeader2 = list(lines2)
 
 for point in dataWithHeader2[1:]:
@@ -124,9 +124,19 @@ for point in dataWithHeader2[1:]:
 
     if tagCounterM > K//2:
         print('\nFor K=3 the tag is: M\n')
+        point[-1]='M'
 
     elif tagCounterF > K//2:
         print('\nFor K=3 the tag is: F\n')
+        point[-1]='F'
 
     else:
         print("ERROR\nInsufficent Information\n")
+        point[-1]='?'
+
+for i in dataWithHeader2:
+    print(i)
+
+with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_testOutput.csv', 'w') as myCsvfileDst:
+    writer = csv.writer(myCsvfileDst)
+    writer.writerows(dataWithHeader2)
