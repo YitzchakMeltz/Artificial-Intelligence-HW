@@ -1,4 +1,5 @@
 #================================ Q1.0 ================================
+print('#================================ Q1 ================================')
 import math
 import csv
 
@@ -86,3 +87,46 @@ elif tagCounterF >= 2:
 
 else:
     print("ERROR\nInsufficent Information\n")
+
+#================================ Q2.1 ================================
+print('#================================ Q2 ================================')
+K = 3
+
+with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfileSrc:
+    lines1 = csv.reader(myCsvfileSrc)
+    dataWithHeader1 = list(lines1)
+
+with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_test.csv', 'r') as myCsvfileDst:
+    lines2 = csv.reader(myCsvfileDst)
+    dataWithHeader2 = list(lines2)
+
+for point in dataWithHeader2[1:]:
+
+    eucDistances = [] # list of distances, will hold objects of type distClass
+
+    for vec in dataWithHeader1[1:]:
+        obj = distClass()
+        distance = euclideanDistance(point, vec, len(vec)-1)
+        obj.dist = distance
+        obj.tag = vec[-1]
+        eucDistances.append(obj)
+
+    eucDistances.sort(key=lambda x: x.dist) 
+
+    tagCounterM = 0
+    tagCounterF = 0
+
+    for i in range(K):
+        if eucDistances[i].tag == 'M':
+            tagCounterM += 1
+        if eucDistances[i].tag == 'F':
+            tagCounterF += 1
+
+    if tagCounterM > K//2:
+        print('\nFor K=3 the tag is: M\n')
+
+    elif tagCounterF > K//2:
+        print('\nFor K=3 the tag is: F\n')
+
+    else:
+        print("ERROR\nInsufficent Information\n")
