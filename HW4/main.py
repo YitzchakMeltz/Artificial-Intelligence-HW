@@ -2,6 +2,7 @@
 print('#================================ Q1 ================================')
 import math
 import csv
+import copy      # need for deep copy in Q2.2
 
 #================================ Q1.1 ================================
 point = [1, 0, 0, '?'] 
@@ -89,7 +90,14 @@ else:
     print("ERROR\nInsufficent Information\n")
 
 #================================ Q2.1 ================================
-print('#================================ Q2 ================================')
+def checkAccurancy(data1, data2):
+    countAccurent = 0
+    for i in range(len(data1)):
+        if data1[i][-1] == data2[i][-1]:
+            countAccurent += 1
+    return (countAccurent/len(data1))
+
+print('#================================ Q2.1 ================================')
 K = 3
 
 with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfileSrc1:
@@ -100,7 +108,9 @@ with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFil
     lines2 = csv.reader(myCsvfileSrc2)
     dataWithHeader2 = list(lines2)
 
-for point in dataWithHeader2[1:]:
+data = copy.deepcopy(dataWithHeader2)
+
+for point in data[1:]:
 
     eucDistances = [] # list of distances, will hold objects of type distClass
 
@@ -123,20 +133,84 @@ for point in dataWithHeader2[1:]:
             tagCounterF += 1
 
     if tagCounterM > K//2:
-        print('\nFor K=3 the tag is: M\n')
+        #print('\nFor K=3 the tag is: M\n')
         point[-1]='M'
 
     elif tagCounterF > K//2:
-        print('\nFor K=3 the tag is: F\n')
+        #print('\nFor K=3 the tag is: F\n')
         point[-1]='F'
 
     else:
-        print("ERROR\nInsufficent Information\n")
+        #print("ERROR\nInsufficent Information\n")
         point[-1]='?'
 
-for i in dataWithHeader2:
-    print(i)
-
-with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_testOutput.csv', 'w') as myCsvfileDst:
+with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_testOutput.csv', 'w', newline='') as myCsvfileDst:
     writer = csv.writer(myCsvfileDst)
     writer.writerows(dataWithHeader2)
+
+print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
+
+
+#================================ Q2.2 ================================
+
+print('#================================ Q2.2 ================================')
+
+def knn_csv_output(K):
+    with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytrain.csv', 'r') as myCsvfileSrc1:
+        lines1 = csv.reader(myCsvfileSrc1)
+        dataWithHeader1 = list(lines1)
+
+    with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytest.csv', 'r') as myCsvfileSrc2:
+        lines2 = csv.reader(myCsvfileSrc2)
+        dataWithHeader2 = list(lines2)
+
+    data = copy.deepcopy(dataWithHeader2)
+
+    for point in data[1:]:
+
+        eucDistances = [] # list of distances, will hold objects of type distClass
+
+        for vec in dataWithHeader1[1:]:
+            obj = distClass()
+            distance = euclideanDistance(point, vec, len(vec)-1)
+            obj.dist = distance
+            obj.tag = vec[-1]
+            eucDistances.append(obj)
+
+        eucDistances.sort(key=lambda x: x.dist) 
+
+        tagCounterM = 0
+        tagCounterF = 0
+
+        for i in range(K):
+            if eucDistances[i].tag == 'M':
+                tagCounterM += 1
+            if eucDistances[i].tag == 'F':
+                tagCounterF += 1
+
+        if tagCounterM > K//2:
+            #print('\nFor K=3 the tag is: M\n')
+            point[-1]='M'
+
+        elif tagCounterF > K//2:
+            #print('\nFor K=3 the tag is: F\n')
+            point[-1]='F'
+
+        else:
+            #print("ERROR\nInsufficent Information\n")
+            point[-1]='?'
+
+    with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytest1e.csv', 'w', newline='') as myCsvfileDst:
+        writer = csv.writer(myCsvfileDst)
+        writer.writerows(data)
+
+    print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
+
+K = 1
+knn_csv_output(K)
+
+K = 7
+knn_csv_output(K)
+
+K = 19
+knn_csv_output(K)
