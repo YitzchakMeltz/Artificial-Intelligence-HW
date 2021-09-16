@@ -90,12 +90,17 @@ else:
     print("ERROR\nInsufficent Information\n")
 
 #================================ Q2.1 ================================
-def checkAccurancy(data1, data2):
+# check accurency by comparing expected to result
+def checkAccurancy(expected, result):
     countAccurent = 0
-    for i in range(len(data1)):
-        if data1[i][-1] == data2[i][-1]:
+
+    # count tags that are equal to tags in expected
+    for i in range(len(expected)):
+        if expected[i][-1] == result[i][-1]:
             countAccurent += 1
-    return (countAccurent/len(data1))
+
+    # divide amount of tags that are as expected by total number of tags
+    return (countAccurent/len(expected))
 
 print('#================================ Q2.1 ================================')
 K = 3
@@ -148,6 +153,7 @@ with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFil
     writer = csv.writer(myCsvfileDst)
     writer.writerows(dataWithHeader2)
 
+# print accurency as percentage
 print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
 
@@ -213,6 +219,7 @@ def knn_csv_output(K, distanceFunc, dstFileName):
         writer = csv.writer(myCsvfileDst)
         writer.writerows(data)
 
+    # print accurency as percentage
     print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
 K = 1
