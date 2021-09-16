@@ -152,14 +152,21 @@ print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
 
 #================================ Q2.2 ================================
+#======================= Q2.2a-d =======================
+# Q2.2a For K=1 the accurency is 50.0 %
+# Q2.2b For K=7 the accurency is 74.0 %
+# Q2.2c For K=19 the accurency is 68.0 %
+# Q2.2d K=7 came out the best with 74.0 % accurency
 
 print('#================================ Q2.2 ================================')
 
-def knn_csv_output(K):
+def knn_csv_output(K, distanceFunc, dstFileName):
     with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytrain.csv', 'r') as myCsvfileSrc1:
         lines1 = csv.reader(myCsvfileSrc1)
         dataWithHeader1 = list(lines1)
 
+    
+    
     with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytest.csv', 'r') as myCsvfileSrc2:
         lines2 = csv.reader(myCsvfileSrc2)
         dataWithHeader2 = list(lines2)
@@ -168,24 +175,24 @@ def knn_csv_output(K):
 
     for point in data[1:]:
 
-        eucDistances = [] # list of distances, will hold objects of type distClass
+        Distances = [] # list of distances, will hold objects of type distClass
 
         for vec in dataWithHeader1[1:]:
             obj = distClass()
-            distance = euclideanDistance(point, vec, len(vec)-1)
+            distance = distanceFunc(point, vec, len(vec)-1)
             obj.dist = distance
             obj.tag = vec[-1]
-            eucDistances.append(obj)
+            Distances.append(obj)
 
-        eucDistances.sort(key=lambda x: x.dist) 
+        Distances.sort(key=lambda x: x.dist) 
 
         tagCounterM = 0
         tagCounterF = 0
 
         for i in range(K):
-            if eucDistances[i].tag == 'M':
+            if Distances[i].tag == 'M':
                 tagCounterM += 1
-            if eucDistances[i].tag == 'F':
+            if Distances[i].tag == 'F':
                 tagCounterF += 1
 
         if tagCounterM > K//2:
@@ -200,17 +207,69 @@ def knn_csv_output(K):
             #print("ERROR\nInsufficent Information\n")
             point[-1]='?'
 
-    with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytest1e.csv', 'w', newline='') as myCsvfileDst:
+    dstFilePath = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/' + dstFileName
+
+    with open(dstFilePath, 'w', newline='') as myCsvfileDst:
         writer = csv.writer(myCsvfileDst)
         writer.writerows(data)
 
     print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
 K = 1
-knn_csv_output(K)
+knn_csv_output(K,euclideanDistance,'mytest1e.csv')
 
 K = 7
-knn_csv_output(K)
+knn_csv_output(K,euclideanDistance,'mytest7e.csv')
 
 K = 19
-knn_csv_output(K)
+knn_csv_output(K,euclideanDistance,'mytest19e.csv')
+
+#======================= Q2.2e =======================
+# Q2.2e 
+# For K=1 the accurency is 61.0 %
+# For K=7 the accurency is 63.0 %
+# For K=19 the accurency is 70.0 %
+
+def manhattanDistance(instance1, instance2, length):
+   distance = 0
+   for x in range(length):
+         num1=float(instance1[x])
+         num2=float(instance2[x])
+         distance += abs(num1-num2)
+   return distance
+
+K = 1
+knn_csv_output(K,manhattanDistance,'mytest1m.csv')
+
+K = 7
+knn_csv_output(K,manhattanDistance,'mytest7m.csv')
+
+K = 19
+knn_csv_output(K,manhattanDistance,'mytest19m.csv')
+
+#======================= Q2.2f =======================
+# Q2.2f 
+# For K=1 the accurency is 61.0 %
+# For K=7 the accurency is 55.0 %
+# For K=19 the accurency is 56.0 %
+
+def hammingDistance(instance1, instance2, length):
+   distance = 0
+   for x in range(length):
+         num1=float(instance1[x])
+         num2=float(instance2[x])
+         if num1 != num2:
+            distance += 1
+   return distance
+
+K = 1
+knn_csv_output(K,hammingDistance,'mytest1h.csv')
+
+K = 7
+knn_csv_output(K,hammingDistance,'mytest7h.csv')
+
+K = 19
+knn_csv_output(K,hammingDistance,'mytest19h.csv')
+
+# Q2.2g
+# Euclidean Distance with K=7 had the most accurency at 74.0 %
