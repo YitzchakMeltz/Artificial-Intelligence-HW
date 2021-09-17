@@ -1,3 +1,14 @@
+# This code is written in the order given by the HW.
+
+# Comments show what question each part of code was written for
+# this allows you to see all steps of my work.
+
+# The code occasionaly uses code written in previous step and sometimes replaces it
+# when refactoring is needed (or wanted).
+
+# The final code is more towards the end of this file and includes answers to the questions.
+# The answers to questions are written before the code that led to their solution
+
 #================================ Q1.0 ================================
 print('#================================ Q1 ================================')
 import math
@@ -5,12 +16,13 @@ import csv
 import copy      # need for deep copy in Q2.2
 
 #================================ Q1.1 ================================
-point = [1, 0, 0, '?'] 
+point = [1, 0, 0, '?']  # an unknown tag
 data1 = [1, 1, 1, 'M']
 data2 = [1, 2, 0, 'F']
 
 #================================ Q1.2 ================================
 
+# create a toString function for vectors
 def printVector(vec):
     print('The vector ',vec[:-1],' has tag ',vec[-1])
 
@@ -72,6 +84,7 @@ for vec in dataset[1:]:
 eucDistances.sort(key=lambda x: x.dist) 
 
 #================================ Q1.7 ================================
+
 print("Point: ",point[:-1]) # print the point to calculate distance from
 
 # print the vectors in the document with their distance from the first point
@@ -80,9 +93,17 @@ for vec in dataset[1:]:
 
 #================================ Q1.8 ================================
 
+# Q1.8
+# ANSWERS:
+# For K=1 the tag is:  F
+
 print('\nFor K=1 the tag is: ',eucDistances[0].tag,'\n')
 
 #================================ Q1.9 ================================
+
+# Q1.8
+# ANSWERS:
+# For K=3 the tag is:  F
 
 # create counters to count the M and F tags
 tagCounterM = 0
@@ -107,6 +128,7 @@ else:
     print("ERROR\nInsufficent Information\n")
 
 #================================ Q2.1 ================================
+
 # check accurency by comparing expected to result
 def checkAccurancy(expected, result):
     countAccurent = 0
@@ -189,6 +211,7 @@ print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
 
 #================================ Q2.2 ================================
+
 #======================= Q2.2a-d =======================
 # Q2.2a For K=1 the accurency is 50.0 %
 # Q2.2b For K=7 the accurency is 74.0 %
@@ -199,18 +222,22 @@ print('#================================ Q2.2 ================================')
 
 # create the above code as a function that allows different distance functions, K's, and output file names
 def knn_csv_output(K, distanceFunc, dstFileName):
+
+    # open document for learning
     with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytrain.csv', 'r') as myCsvfileSrc1:
         lines1 = csv.reader(myCsvfileSrc1)
         dataWithHeader1 = list(lines1)
 
-    
-    
+    # open document for testing
     with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytest.csv', 'r') as myCsvfileSrc2:
         lines2 = csv.reader(myCsvfileSrc2)
         dataWithHeader2 = list(lines2)
 
+    # create a deep copy of data to be tested so that we can later compare the results to the given data
     data = copy.deepcopy(dataWithHeader2)
 
+    # iterate through the data for testing
+    # exclude the header
     for point in data[1:]:
 
         Distances = [] # list of distances, will hold objects of type distClass
@@ -222,8 +249,10 @@ def knn_csv_output(K, distanceFunc, dstFileName):
             obj.tag = vec[-1]
             Distances.append(obj)
 
+        # sort the distances so we can find the smallest K distances
         Distances.sort(key=lambda x: x.dist) 
 
+        # create counters to count the M and F tags
         tagCounterM = 0
         tagCounterF = 0
 
@@ -233,20 +262,25 @@ def knn_csv_output(K, distanceFunc, dstFileName):
             if Distances[i].tag == 'F':
                 tagCounterF += 1
 
+        # check if M tags is more than half
         if tagCounterM > K//2:
             #print('\nFor K=3 the tag is: M\n')
             point[-1]='M'
 
+        # check if F tags is more than half
         elif tagCounterF > K//2:
             #print('\nFor K=3 the tag is: F\n')
             point[-1]='F'
 
+        # handle ERROR
         else:
             #print("ERROR\nInsufficent Information\n")
             point[-1]='?'
 
+    # create output path from argument dstFileName (output file name)
     dstFilePath = 'C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/' + dstFileName
 
+    # save results of testing to file
     with open(dstFilePath, 'w', newline='') as myCsvfileDst:
         writer = csv.writer(myCsvfileDst)
         writer.writerows(data)
@@ -254,6 +288,7 @@ def knn_csv_output(K, distanceFunc, dstFileName):
     # print accurency as percentage
     print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
+# test for K = 1,7,19 using Euclidean Distance
 K = 1
 knn_csv_output(K,euclideanDistance,'mytest1e.csv')
 
@@ -264,7 +299,9 @@ K = 19
 knn_csv_output(K,euclideanDistance,'mytest19e.csv')
 
 #======================= Q2.2e =======================
+
 # Q2.2e 
+# ANSWERS:
 # For K=1 the accurency is 61.0 %
 # For K=7 the accurency is 63.0 %
 # For K=19 the accurency is 70.0 %
@@ -277,6 +314,7 @@ def manhattanDistance(instance1, instance2, length):
          distance += abs(num1-num2)
    return distance
 
+# test for K = 1,7,19 using Mannhatan Distance
 K = 1
 knn_csv_output(K,manhattanDistance,'mytest1m.csv')
 
@@ -288,6 +326,7 @@ knn_csv_output(K,manhattanDistance,'mytest19m.csv')
 
 #======================= Q2.2f =======================
 # Q2.2f 
+# ANSWERS:
 # For K=1 the accurency is 61.0 %
 # For K=7 the accurency is 55.0 %
 # For K=19 the accurency is 56.0 %
@@ -301,6 +340,7 @@ def hammingDistance(instance1, instance2, length):
             distance += 1
    return distance
 
+# test for K = 1,7,19 using Hamming Distance
 K = 1
 knn_csv_output(K,hammingDistance,'mytest1h.csv')
 
@@ -311,4 +351,5 @@ K = 19
 knn_csv_output(K,hammingDistance,'mytest19h.csv')
 
 # Q2.2g
+# ANSWERS:
 # Euclidean Distance with K=7 had the most accurency at 74.0 %
