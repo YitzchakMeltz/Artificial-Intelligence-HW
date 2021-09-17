@@ -21,15 +21,17 @@ printVector(data2)
 def euclideanDistance(instance1, instance2, length):
    distance = 0
    for x in range(length):
-         #print ('x is ' , x)
          num1=float(instance1[x])
          num2=float(instance2[x])
          distance += pow(num1-num2, 2)
    return math.sqrt(distance)
 
+# test the euclideanDistance function
 print('Distance between vectors: ',euclideanDistance(data1,data2,len(data2)-1),'\n')
 
 #================================ Q1.4 ================================
+
+# open file to test knn using the first vector as the point to compare it to
 with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfile:
     lines = csv.reader(myCsvfile)
     dataWithHeader = list(lines)
@@ -37,8 +39,12 @@ with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFil
 #put data in dataset without header line
 dataset = dataWithHeader[1:]
 
+# check our code so far:
+# print the first (the point for learning) and the second (a point of testing) points
 printVector(dataset[0])
 printVector(dataset[1])
+
+#calculate and print the distance between those two points
 distance = euclideanDistance(dataset[0],dataset[1],len(dataset[1])-1)
 print('Distance between vectors: ',distance,'\n')
 
@@ -49,8 +55,10 @@ class distClass:
 
 eucDistances = [] # list of distances, will hold objects of type distClass
 
+# use the first point in the file as the learning point
 point = dataset[0]
 
+# create a list of distClass objects of all points distance from the first point 
 for vec in dataset[1:]:
     obj = distClass()
     distance = euclideanDistance(point, vec, len(vec)-1)
@@ -59,18 +67,24 @@ for vec in dataset[1:]:
     eucDistances.append(obj)
 
 #================================ Q1.6 ================================
+
+# sort the distances so we can find the smallest K distances
 eucDistances.sort(key=lambda x: x.dist) 
 
 #================================ Q1.7 ================================
 print("Point: ",point[:-1]) # print the point to calculate distance from
 
+# print the vectors in the document with their distance from the first point
 for vec in dataset[1:]:
     print(vec[:-1],' Distance: ',euclideanDistance(point, vec, len(vec)-1))
 
 #================================ Q1.8 ================================
+
 print('\nFor K=1 the tag is: ',eucDistances[0].tag,'\n')
 
 #================================ Q1.9 ================================
+
+# create counters to count the M and F tags
 tagCounterM = 0
 tagCounterF = 0
 
@@ -80,12 +94,15 @@ for i in range(3):
     if eucDistances[i].tag == 'F':
         tagCounterF += 1
 
+# check if M tags is more than half
 if tagCounterM >= 2:
     print('\nFor K=3 the tag is: M\n')
 
+# check if F tags is more than half
 elif tagCounterF >= 2:
     print('\nFor K=3 the tag is: F\n')
 
+# handle ERROR
 else:
     print("ERROR\nInsufficent Information\n")
 
@@ -103,22 +120,30 @@ def checkAccurancy(expected, result):
     return (countAccurent/len(expected))
 
 print('#================================ Q2.1 ================================')
+
 K = 3
 
+# open document for learning
 with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile.csv', 'r') as myCsvfileSrc1:
     lines1 = csv.reader(myCsvfileSrc1)
     dataWithHeader1 = list(lines1)
 
+# open document for testing
 with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_test.csv', 'r') as myCsvfileSrc2:
     lines2 = csv.reader(myCsvfileSrc2)
     dataWithHeader2 = list(lines2)
 
+# create a deep copy of data to be tested so that we can later compare the results to the given data
 data = copy.deepcopy(dataWithHeader2)
 
+# iterate through the data for testing
+# exclude the header
 for point in data[1:]:
 
     eucDistances = [] # list of distances, will hold objects of type distClass
 
+    # iterate through the learning file to find distances
+    # exclude the header
     for vec in dataWithHeader1[1:]:
         obj = distClass()
         distance = euclideanDistance(point, vec, len(vec)-1)
@@ -126,8 +151,10 @@ for point in data[1:]:
         obj.tag = vec[-1]
         eucDistances.append(obj)
 
+    # sort the distances so we can find the smallest K distances
     eucDistances.sort(key=lambda x: x.dist) 
 
+    # create counters to count the M and F tags
     tagCounterM = 0
     tagCounterF = 0
 
@@ -137,18 +164,22 @@ for point in data[1:]:
         if eucDistances[i].tag == 'F':
             tagCounterF += 1
 
+    # check if M tags is more than half
     if tagCounterM > K//2:
         #print('\nFor K=3 the tag is: M\n')
         point[-1]='M'
 
+    # check if F tags is more than half
     elif tagCounterF > K//2:
         #print('\nFor K=3 the tag is: F\n')
         point[-1]='F'
 
+    # handle ERROR
     else:
         #print("ERROR\nInsufficent Information\n")
         point[-1]='?'
 
+# save results of testing to file
 with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/myFile_testOutput.csv', 'w', newline='') as myCsvfileDst:
     writer = csv.writer(myCsvfileDst)
     writer.writerows(dataWithHeader2)
@@ -166,6 +197,7 @@ print('Accurency: ',checkAccurancy(dataWithHeader2[1:],data[1:])*100,'%')
 
 print('#================================ Q2.2 ================================')
 
+# create the above code as a function that allows different distance functions, K's, and output file names
 def knn_csv_output(K, distanceFunc, dstFileName):
     with open('C:/Users/hmeltz/Documents/GitHub/Artificial-Intelligence-HW/HW4/mytrain.csv', 'r') as myCsvfileSrc1:
         lines1 = csv.reader(myCsvfileSrc1)
