@@ -455,6 +455,8 @@ def compThreeCase(s):
             for j in range(columns):
                 ans[i - j + 3].append(s.board[i][j])
 
+        ans = ans[-3:] + ans[:-3]      
+
         for i in range(len(ans)):
             countComp=0
             for j in range(len(ans[i])):
@@ -463,7 +465,10 @@ def compThreeCase(s):
                 if ans[i][j]==0 or ans[i][j]==HUMAN:
                     countComp=0
                 if countComp==3:
-                    totalSum += 500
+                    print("DEBUG: i:",i, "  len(ans):",len(ans),"  j+1: ", j+1)
+                    print(ans)
+                    if j+1 < len(ans[i]) and ans[i][j+1]==0:
+                        totalSum += 500
         
         return totalSum
 
@@ -801,4 +806,3 @@ def createThreatBoard(s,player):
     return threatBoard
 
     #====================================================================
-    #=============================== GUI ================================
