@@ -271,6 +271,7 @@ def inputComputer(s):
 
 
 def winningCase(s):
+        print(s.board)
     # Check Rows for final state
         for i in range(rows):
             countComp=0
