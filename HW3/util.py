@@ -15,7 +15,7 @@ def iter_column(PLAYER, matrix, seq_len, val):
     for x in range(max_col):
         for y in range(max_row):
             cols[x].append(matrix[y][x])
-    return count_consecutive(PLAYER, matrix, seq_len, val)
+    return count_consecutive(PLAYER, cols, seq_len, val)
 
 def iter_row(PLAYER, matrix, seq_len, val):
     max_col = len(matrix[0])
@@ -24,7 +24,7 @@ def iter_row(PLAYER, matrix, seq_len, val):
     for x in range(max_col):
         for y in range(max_row):
             rows[y].append(matrix[y][x])
-    return count_consecutive(PLAYER, matrix, seq_len, val)
+    return count_consecutive(PLAYER, rows, seq_len, val)
 
 def iter_upward_diagonal(PLAYER, matrix, seq_len, val):
     max_col = len(matrix[0])
@@ -33,7 +33,7 @@ def iter_upward_diagonal(PLAYER, matrix, seq_len, val):
     for x in range(max_col):
         for y in range(max_row):
             udiag[x+y].append(matrix[y][x])
-    return count_consecutive(PLAYER, matrix, seq_len, val)
+    return count_consecutive(PLAYER, udiag, seq_len, val)
 
 def iter_downward_diagonal(PLAYER, matrix, seq_len, val):
     max_col = len(matrix[0])
@@ -43,28 +43,31 @@ def iter_downward_diagonal(PLAYER, matrix, seq_len, val):
     for x in range(max_col):
         for y in range(max_row):
             ddiag[x-y-min_bdiag].append(matrix[y][x])
-    return count_consecutive(PLAYER, matrix, seq_len, val)
+    return count_consecutive(PLAYER, ddiag, seq_len, val)
 
 def count_consecutive(PLAYER, matrix, seq_len, val):
-    if val == 3:
+    total_value = 0
+    if seq_len == 3:
         return count_three_consecutive(PLAYER, matrix, val)
-    for row in matrix:
+    for i, row in enumerate(matrix):
         count = 0 
-        for column in row:
+        for j, column in enumerate(row):
             if column == PLAYER:
                 count += 1
             if column != PLAYER:
                 count = 0
             if count == seq_len:
-                return val
-    return 0
+                total_value += empty_slots(matrix, seq_len, i, j) * val
+    return total_value
 
 # For three in a row allow one empty spot in between
 def count_three_consecutive(PLAYER, matrix, val):
-    for row in matrix:
+    seq_len = 3
+    total_value = 0
+    for i, row in enumerate(matrix):
         count = 0 
         count_empty = 0
-        for column in row:
+        for j, column in enumerate(row):
             if column == PLAYER:
                 count += 1
             elif column == EMPTY and count_empty == 0:
@@ -72,8 +75,8 @@ def count_three_consecutive(PLAYER, matrix, val):
             else:
                 count = 0
             if count == seq_len:
-                return val
-    return 0
+                total_value += empty_slots(matrix, seq_len, i, j) * val
+    return total_value
 
 def empty_slots(matrix, seq_len, i, j):
     slots = 0
