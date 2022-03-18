@@ -57,7 +57,7 @@ def count_consecutive(PLAYER, matrix, seq_len, val):
             if column != PLAYER:
                 count = 0
             if count == seq_len:
-                total_value += empty_slots(matrix, seq_len, i, j) * val
+                total_value += empty_side_slots(matrix, seq_len, i, j) * val
     return total_value
 
 # For three in a row allow one empty spot in between
@@ -74,14 +74,27 @@ def count_three_consecutive(PLAYER, matrix, val):
                 count_empty = 1
             else:
                 count = 0
+            if count == seq_len and count_empty == 0:
+                total_value += horizontal_double_trap() #fill
             if count == seq_len:
-                total_value += empty_slots(matrix, seq_len, i, j) * val
+                total_value += empty_side_slots(matrix, seq_len, i, j) * val
     return total_value
 
-def empty_slots(matrix, seq_len, i, j):
+def empty_side_slots(matrix, seq_len, i, j):
     slots = 0
     if j-seq_len >= 0 and matrix[i][j-seq_len] == EMPTY:
         slots += 1
     if j < len(matrix[i])-1 and matrix[i][j+1] == EMPTY:
         slots += 1
     return slots
+
+def empty_down_slots(matrix, i, j):
+    count = 0
+    i -= 1
+    while i>0 and matrix[i][j] == EMPTY:
+        count += 1
+        i -= 1
+    return count
+
+def horizontal_double_trap():
+    pass
